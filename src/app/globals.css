@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-background: #ffffff;
+  --color-foreground: #171717;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Navy */
+  --color-navy-50: #E8EDF5;
+  --color-navy-100: #C5D1E6;
+  --color-navy-200: #9FB2D4;
+  --color-navy-300: #7893C2;
+  --color-navy-400: #5A7AB5;
+  --color-navy-500: #3C62A7;
+  --color-navy-600: #2F4F8A;
+  --color-navy-700: #1B3A6D;
+  --color-navy-800: #142C52;
+  --color-navy-900: #0D1D37;
+  --color-navy-950: #071020;
+
+  /* Gold */
+  --color-gold-50: #FDF8ED;
+  --color-gold-100: #F9ECCC;
+  --color-gold-200: #F2D999;
+  --color-gold-300: #E8C261;
+  --color-gold-400: #D4A230;
+  --color-gold-500: #C49325;
+  --color-gold-600: #A87A1E;
+  --color-gold-700: #8A611A;
+  --color-gold-800: #6A4B15;
+  --color-gold-900: #4A3410;
+
+  /* Red accent */
+  --color-accent-50: #FDE8EC;
+  --color-accent-100: #F8C4CD;
+  --color-accent-200: #F09DAC;
+  --color-accent-300: #E5707F;
+  --color-accent-400: #D4485A;
+  --color-accent-500: #C41E3A;
+  --color-accent-600: #A81932;
+  --color-accent-700: #8C1429;
+  --color-accent-800: #700F21;
+  --color-accent-900: #540B18;
+
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-foreground);
 }
