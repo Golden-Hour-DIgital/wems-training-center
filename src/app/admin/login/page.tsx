@@ -24,10 +24,17 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createClient();
-      const { error: signInError } = await supabase.auth.signInWithPassword({
+
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Login timed out after 10 seconds. Supabase may be unreachable.")), 10000)
+      );
+
+      const loginPromise = supabase.auth.signInWithPassword({
         email,
         password,
       });
+
+      const { error: signInError } = await Promise.race([loginPromise, timeoutPromise]) as Awaited<typeof loginPromise>;
 
       if (signInError) {
         setError(signInError.message);
