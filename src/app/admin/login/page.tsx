@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/admin/dashboard";
 
@@ -24,17 +23,10 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createClient();
-
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Login timed out after 10 seconds. Supabase may be unreachable.")), 10000)
-      );
-
-      const loginPromise = supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      const { error: signInError } = await Promise.race([loginPromise, timeoutPromise]) as Awaited<typeof loginPromise>;
 
       if (signInError) {
         setError(signInError.message);
@@ -42,8 +34,8 @@ export default function AdminLoginPage() {
         return;
       }
 
-      router.push(redirect);
-      router.refresh();
+      // Use full page redirect to ensure cookies are sent on the fresh request
+      window.location.href = redirect;
     } catch (err) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred");
       setLoading(false);
