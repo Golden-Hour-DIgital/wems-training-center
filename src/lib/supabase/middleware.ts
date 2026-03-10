@@ -31,7 +31,15 @@ export async function updateSession(request: NextRequest) {
 
   const {
     data: { user },
+    error: userError,
   } = await supabase.auth.getUser();
+
+  console.log("[middleware]", request.nextUrl.pathname, {
+    hasUser: !!user,
+    userId: user?.id,
+    userError: userError?.message,
+    cookies: request.cookies.getAll().map(c => c.name),
+  });
 
   // Protect admin routes (except login)
   if (
@@ -39,19 +47,23 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/admin/login")
   ) {
     if (!user) {
+      console.log("[middleware] No user, redirecting to login");
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
       return NextResponse.redirect(loginUrl);
     }
 
     // Verify user is an active admin
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("admin_profiles")
       .select("is_active")
       .eq("id", user.id)
       .single();
 
+    console.log("[middleware] Profile check:", { profile, profileError: profileError?.message });
+
     if (!profile?.is_active) {
+      console.log("[middleware] No active profile, redirecting to login");
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
